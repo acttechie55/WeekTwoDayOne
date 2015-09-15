@@ -2,14 +2,14 @@ var library = (function() {
   return {
 	TimeStamp: (function(){
    	  return {
-			 //UTC Timestamp to the second//
+		//UTC Timestamp to the second//
 		UnixTimestamp: function(){
-			var utcDate = new Date(Date.UTC('','','','','',''));
-				  return Math.ceil(utcDate.getTime()/1000)
+			var uTimestamp = Math.floor(Date.now() / 1000);
+			return String(uTimestamp);
 		},
 		//UTC Millisecond//
 		UnixMillisecond: function(){
-			var thisMoment = new Date().getUTCMilliseconds();
+			var thisMoment = Math.floor(Date.now());
 			return String(thisMoment);
 		}
 	  }
@@ -18,11 +18,29 @@ var library = (function() {
 	  return {
 		Time: (function() {
 		  return {
+			// returns time as 8:58 AM//
 	  	    WithSeconds: function(){
-				  var myDate = new Date().getTime();
-				  return String(myDate);
+				var hour    = new Date().getHours();
+				var timeOfDay = "AM"
+					if (hour   > 11) { timeOfDay = "PM"; } 
+  			    	if (hour   > 12) { hour = hour - 12;}
+   					if (hour   == 0) { hour = 12;}
+   					if (hour   < 10) { hour = hour;}
+    			var minute  = new Date().getMinutes();
+				var second  = new Date().getSeconds();
+				return hour+':'+minute+':'+second+' '+timeOfDay;   
 			  },
-	   	    WithOutSeconds: function() {}
+			// returns time as 8:58:40 AM//
+	   	    WithOutSeconds: function() {
+				var hour    = new Date().getHours();
+				var timeOfDay = "AM"
+					if (hour   > 11) { timeOfDay = "PM"; } 
+  			    	if (hour   > 12) { hour = hour - 12;}
+   					if (hour   == 0) { hour = 12;}
+   					if (hour   < 10) { hour = hour;}
+    			var minute  = new Date().getMinutes();
+				return hour+':'+minute+' '+timeOfDay;
+			   }
 		  }
 		})(),
 		MDY: (function(){
@@ -220,20 +238,23 @@ var library = (function() {
 						return String(day);
 					},
 					//Day of the year: eg - 257th day of the year//
+					//Unfinished//
 					Ordinal: function(){
 						var now = new Date();
 						var start = new Date(now.getFullYear(), 0, 0);
 						var diff = now - start;
 						var oneDay = 1000 * 60 * 60 * 24;
 						var day = Math.floor(diff / oneDay);
-						var DOYOrdinal = new Date().getDate();
-						if (DOYOrdinal>3 && DOYOrdinal<21) return DOYOrdinal+'th';
-						switch(DOYOrdinal%10){
-							case 1: return DOYOrdinal+'st';
-							case 2: return DOYOrdinal+'nd';
-							case 3: return DOYOrdinal+'rd';
-							default: return DOYOrdinal+'th';
-						}
+						if (day === 1)
+						return String(day);
+						//var DOYOrdinal = new Date().getDate();
+						//if (DOYOrdinal>3 && DOYOrdinal<21); //return DOYOrdinal+'th';
+						//switch(DOYOrdinal%10){
+						//	case 1: return DOYOrdinal+'st';
+						//	case 2: return DOYOrdinal+'nd';
+						//	case 3: return DOYOrdinal+'rd';
+						//	default: return DOYOrdinal+'th';
+						
 					}
 				}
 			})(),
