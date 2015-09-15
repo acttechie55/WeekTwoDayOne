@@ -2,57 +2,98 @@ var library = (function() {
   return {
 	TimeStamp: (function(){
    	  return {
-		UnixTimestamp: function(){},
-		UnixMillisecond: function(){}
+			 //UTC Timestamp to the second//
+		UnixTimestamp: function(){
+			var utcDate = new Date(Date.UTC('','','','','',''));
+				  return Math.ceil(utcDate.getTime()/1000)
+		},
+		//UTC Millisecond//
+		UnixMillisecond: function(){
+			var thisMoment = new Date().getUTCMilliseconds();
+			return String(thisMoment);
+		}
 	  }
 	})(),
 	Local: (function(){
 	  return {
 		Time: (function() {
 		  return {
-	  	    WithSeconds: function(){},
+	  	    WithSeconds: function(){
+				  var myDate = new Date().getTime();
+				  return String(myDate);
+			  },
 	   	    WithOutSeconds: function() {}
 		  }
 		})(),
 		MDY: (function(){
 	  	  return {
-		    Numeral: function(){},
-			Name: function(){}
+			//returns month/day/year as 9/15/2015
+		    Numeral: function(){
+				var month = new Date().getMonth()+1;
+				var day = new Date().getDate(); 
+				var year    = new Date().getFullYear();
+				return month+'/'+day+'/'+year;
+				
+			},
+			//returns month/day/year as "September 15, 2015"//
+			Name: function(){
+				var FullMonthName = ["January", "February", "March", "April", "May", "June",
+  				"July", "August", "September", "October", "November", "December"];	
+				var LongMonthName = new Date().getMonth();
+				var year    = new Date().getFullYear();
+				var day     = new Date().getDate(); 
+				var comma   = ','
+			 	return FullMonthName[LongMonthName]+' '+day+comma+' '+year;
+				
+			}
 		  }
 		  })(),
 		}
 	})(),
 	Second: (function(){
 		return{
-			Second: function(){},
-			DblDigit: function(){}
+			//returns second in a timestamp//
+			Second: function(){
+				var second = new Date().getSeconds();
+				return String(second);
+			},
+			//returns a double digit second in a timestamp//
+			DblDigit: function(){
+				var SecTwo = new Date().getSeconds();
+				return SecTwo < 10 ? '0' + SecTwo : '' + SecTwo;	
+			}
 		}
 	})(),
 	Minute: (function(){
 		return{
-			Minute: function(){},
-			DblDigit: function(){}
+			//returns the minutes of a time stamp//
+			Minute: function(){
+				var minutes = new Date().getMinutes();
+				return String(minutes);
+			},
+			//returns the double digit time stamp//
+			DblDigit: function(){
+				var MinuteTwo = new Date().getMinutes();
+				return MinuteTwo < 10 ? '0' + MinuteTwo : '' + MinuteTwo;
+			}
 		}
 	})(),
 	Hour: (function(){
 		return {
+			//24 hours format: 13:00//
 			TwentyFourHour: function() {
 				var hours = new Date().getHours();
 				return String(hours);
 			},
-			TwelveHour: function() {
-				var now = new Date();
-var hh = now.getHours();
-var min = now.getMinutes();
-				
-var ampm = (hh>=12)?'pm':'am';
-hh = hh%12;
-hh = hh?hh:12;
-hh = hh<10?'0'+hh:hh;
-min = min<10?'0'+min:min;
-				
-var time = hh+" : "+min+" "+ampm;
-return String(time);
+			//Twelve Hour: 2:00pm, 9:00pm format//
+			TwelveHour: function() {	
+				//HAVE NO IDEA AS TO WHY THIS IS WORKING!!//			
+   				var hour   = new Date().getHours();
+   				if (hour   > 11) 
+  			    if (hour   > 12) { hour = hour - 12;}
+   				if (hour   == 0) { hour = 12;}
+   				if (hour   < 10) { hour = hour;}
+   				return String(hour);
 			},
 			AMPM: (function() {
 				return {
@@ -181,7 +222,7 @@ return String(time);
 					//Day of the year: eg - 257th day of the year//
 					Ordinal: function(){
 						var now = new Date();
-						var start = new Date(now.getFullYear(), 0, 0); // 0,0 means 0 month and 0 day. It is the absolute base point of the year//
+						var start = new Date(now.getFullYear(), 0, 0);
 						var diff = now - start;
 						var oneDay = 1000 * 60 * 60 * 24;
 						var day = Math.floor(diff / oneDay);
@@ -208,6 +249,34 @@ return String(time);
 			}
 		}
 	})(),
-	Defaults: function(){}
+	// return the date & time in the following format: year-month-dayThour:minute:second//
+	Defaults: function(){
+		var now     = new Date(); 
+   		var year    = now.getFullYear();
+    	var month   = now.getMonth()+1; 
+    	var day     = now.getDate();
+    	var hour    = now.getHours();
+    	var minute  = now.getMinutes();
+    	var second  = now.getSeconds(); 
+		var why     = 'T';
+	
+			if(month.toString().length == 1) {
+				var month = '0'+month;
+			}
+			if(day.toString().length == 1) {
+				var day = '0'+day;
+			}   
+			if(hour.toString().length == 1) {
+				var hour = '0'+hour;
+			}
+			if(minute.toString().length == 1) {
+				var minute = '0'+minute;
+			}
+			if(second.toString().length == 1) {
+				var second = '0'+second;
+			}   
+			var dateTime = year+'-'+month+'-'+day+why+hour+':'+minute+':'+second;   
+			return dateTime;
+	}
   }
 })();
